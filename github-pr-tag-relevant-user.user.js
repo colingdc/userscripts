@@ -7,8 +7,8 @@
 // @namespace https://github.com/colingdc
 // @include https://github.com/*/*/pull/*
 // @include https://github.com/*/*/commit/*
-// @downloadURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.js
-// @updateURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.js
+// @downloadURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.user.js
+// @updateURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.user.js
 // ==/UserScript==
 
 (function() {
