@@ -1,7 +1,10 @@
 // ==UserScript==
 // @name Tag Relevant User
+// @description Tag the most relevant user in the context when writing a comment on a PR
 // @include https://github.com/*/*/pull/*
 // @include https://github.com/*/*/commit/*
+// @downloadURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.js
+// @updateURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.js
 // ==/UserScript==
 
 (function() {
