@@ -1,6 +1,10 @@
 // ==UserScript==
 // @name Tag Relevant User
+// @version 0.1.0
 // @description Tag the most relevant user in the context when writing a comment on a PR
+// @license MIT
+// @author Colin Grodecoeur
+// @namespace https://github.com/colingdc
 // @include https://github.com/*/*/pull/*
 // @include https://github.com/*/*/commit/*
 // @downloadURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.js
