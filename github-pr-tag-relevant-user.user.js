@@ -30,7 +30,7 @@ async function tagRelevantUser(event) {
         await sleep(10);
     }
 }
-function sleep(ms){
+async function sleep(ms){
 	return new Promise(function(resolve){
 		setTimeout(resolve, ms);
 	});
