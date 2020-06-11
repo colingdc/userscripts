@@ -61,24 +61,26 @@ function tagUserInReply(element) {
 }
 function tagUserInThreadStarter(element) {
     const textarea = element.parentElement.parentElement.nextElementSibling.querySelector(".comment-form-textarea");
-    const pullRequestAuthor = document.querySelector(".gh-header-meta .author");
-    const commitAuthor = document.querySelector(".commit-author");
-    tagUser(textarea, (pullRequestAuthor || commitAuthor).textContent);
+    tagUser(textarea, getAuthorUsername());
 }
 function tagUserInNewCommentField(element) {
-    const textarea = element;
+    tagUser(element, getAuthorUsername());
+}
+function getAuthorUsername() {
     const issueOrPullRequestAuthor = document.querySelector(".gh-header-meta .author");
-    tagUser(textarea, issueOrPullRequestAuthor.textContent);
+    if (issueOrPullRequestAuthor) { return issueOrPullRequestAuthor.textContent; }
+
+    const commitAuthor = document.querySelector(".commit-author");
+    if (commitAuthor) { return commitAuthor.textContent; }
 }
 function tagUser(textarea, username) {
-    if (username === getLoggedInUsername()) { return; }
+    if (! username || username === getLoggedInUsername()) { return; }
     if (textarea && textarea.value.length === 0) {
         textarea.value = `@${username} `;
         textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
     }
-
-    function getLoggedInUsername() {
-        const metaUserLogin = document.querySelector('meta[name="user-login"]');
-        return metaUserLogin && metaUserLogin.content;
-    }
+}
+function getLoggedInUsername() {
+    const metaUserLogin = document.querySelector('meta[name="user-login"]');
+    return metaUserLogin && metaUserLogin.content;
 }
