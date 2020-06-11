@@ -1,62 +1,80 @@
 // ==UserScript==
 // @name Tag Relevant User
-// @version 0.1.0
+// @version 0.2.0
 // @description Tag the most relevant user in the context when writing a comment on a PR
 // @license MIT
 // @author Colin Grodecoeur
 // @namespace https://github.com/colingdc
 // @include https://github.com/*/*/pull/*
 // @include https://github.com/*/*/commit/*
+// @include https://github.com/*/*/issues/*
 // @downloadURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.user.js
 // @updateURL https://raw.githubusercontent.com/colingdc/userscripts/master/github-pr-tag-relevant-user.user.js
 // ==/UserScript==
 
-(function() {
-    "use strict";
-    document.addEventListener("click", tagRelevantUser);
+const CONFIG = {
+    TAG_USER_IN_COMMENT_REPLY: true,
+    TAG_USER_IN_THREAD_STARTER: true,
+    TAG_USER_IN_NEW_COMMENT: true,
+    USERNAME: "YOUR_USERNAME"
+};
+
+(function () {
+    "use strict";
+    document.addEventListener("click", tagRelevantUser);
 })();
 
 async function tagRelevantUser(event) {
-    await waitForTextarea();
-    const element = event.target;
-    if (isReply(element)) {
-        tagUserInReply(element);
-    }
-    else if (isThreadStarter(element)) {
-        tagUserInThreadStarter(element);
-    }
+    await waitForTextarea();
+    const element = event.target;
+    if (CONFIG.TAG_USER_IN_COMMENT_REPLY && isReply(element)) {
+        tagUserInReply(element);
+    } else if (CONFIG.TAG_USER_IN_THREAD_STARTER && isThreadStarter(element)) {
+        tagUserInThreadStarter(element);
+    } else if (CONFIG.TAG_USER_IN_NEW_COMMENT && isNewCommentField(element)) {
+        tagUserInNewCommentField(element);
+    }
 
-    async function waitForTextarea() {
-        await sleep(10);
-    }
+    async function waitForTextarea() {
+        await sleep(10);
+    }
 }
-async function sleep(ms){
-	return new Promise(function(resolve){
-		setTimeout(resolve, ms);
-	});
+async function sleep(ms) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, ms);
+    });
 }
 function isReply(element) {
-    return element && element.classList.contains("review-thread-reply-button");
+    return element && element.classList.contains("review-thread-reply-button");
 }
 function isThreadStarter(element) {
-    return element && element.classList.contains("add-line-comment");
+    return element && element.classList.contains("add-line-comment");
+}
+function isNewCommentField(element) {
+    return element && element.id === "new_comment_field";
 }
 function tagUserInReply(element) {
-    const context = element.parentElement.parentElement.parentElement.parentElement.parentElement;
-    const textarea = context.querySelector(".comment-form-textarea");
-    const comments = context.parentElement.querySelectorAll(".review-comment")
-    const lastCommentAuthor = comments[comments.length - 1].querySelector(".author");
-    tagUser(textarea, lastCommentAuthor.textContent);
+    const context = element.closest(".review-thread-reply");
+    const textarea = context.querySelector(".comment-form-textarea");
+    const comments = context.parentElement.querySelectorAll(".review-comment");
+    const lastCommentAuthor = comments[comments.length - 1].querySelector(".author");
+    tagUser(textarea, lastCommentAuthor.textContent);
 }
 function tagUserInThreadStarter(element) {
-    const textarea = element.parentElement.parentElement.nextElementSibling.querySelector(".comment-form-textarea");
-    const pullRequestAuthor = document.querySelector(".gh-header-meta .author");
-    const commitAuthor = document.querySelector(".commit-author");
-    tagUser(textarea, (pullRequestAuthor || commitAuthor).textContent);
+    const textarea = element.parentElement.parentElement.nextElementSibling.querySelector(".comment-form-textarea");
+    const pullRequestAuthor = document.querySelector(".gh-header-meta .author");
+    const commitAuthor = document.querySelector(".commit-author");
+    tagUser(textarea, (pullRequestAuthor || commitAuthor).textContent);
+}
+function tagUserInNewCommentField(element) {
+    const textarea = element;
+    const issueOrPullRequestAuthor = document.querySelector(".gh-header-meta .author");
+    tagUser(textarea, issueOrPullRequestAuthor.textContent);
 }
 function tagUser(textarea, username) {
-    if (textarea && textarea.value.length === 0) {
-        textarea.value = "@" + username + " ";
-        textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
-    }
+    if (username === CONFIG.USERNAME) { return; }
+    if (textarea && textarea.value.length === 0) {
+        textarea.value = `@${username} `;
+        textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
+    }
 }
