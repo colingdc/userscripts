@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name Tag Relevant User
-// @version 0.2.0
+// @version 0.3.0
 // @description Tag the most relevant user in the context when writing a comment on a PR
 // @license MIT
 // @author Colin Grodecoeur
@@ -15,8 +15,7 @@
 const CONFIG = {
     TAG_USER_IN_COMMENT_REPLY: true,
     TAG_USER_IN_THREAD_STARTER: true,
-    TAG_USER_IN_NEW_COMMENT: true,
-    USERNAME: "YOUR_USERNAME"
+    TAG_USER_IN_NEW_COMMENT: true
 };
 
 (function () {
@@ -72,9 +71,14 @@ function tagUserInNewCommentField(element) {
     tagUser(textarea, issueOrPullRequestAuthor.textContent);
 }
 function tagUser(textarea, username) {
-    if (username === CONFIG.USERNAME) { return; }
+    if (username === getLoggedInUsername()) { return; }
     if (textarea && textarea.value.length === 0) {
         textarea.value = `@${username} `;
         textarea.selectionStart = textarea.selectionEnd = textarea.value.length;
+    }
+
+    function getLoggedInUsername() {
+        const metaUserLogin = document.querySelector('meta[name="user-login"]');
+        return metaUserLogin && metaUserLogin.content;
     }
 }
