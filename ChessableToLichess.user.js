@@ -10,11 +10,11 @@
     "use strict";
 
     const url = new URL(window.location.href);
-    const fen = decodeURIComponent(url.pathname.split("fen/")[1]).replaceAll("U", "/");
+    const urlFen = url.pathname.split("fen/")[1];
     const color = url.searchParams.get("o") ?? "white";
-    
+    const fen = decodeURIComponent(urlFen).replaceAll("U", "/");
+
     const lichessUrl = "https://www.lichess.org/analysis/fromPosition/" + fen.split(" ").join("_") + "?color=" + color;
-    
     const lichessLink = document.createElement("a");
     lichessLink.href = lichessUrl;
     lichessLink.textContent = "Lichess analysis";
