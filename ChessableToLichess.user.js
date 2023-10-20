@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name ChessableToLichess
-// @version 0.1
+// @version 0.2
 // @description Go to Lichess analysis from Chessable in one click
 // @match https://www.chessable.com/*/analysis/fen/*
 // ==/UserScript==
